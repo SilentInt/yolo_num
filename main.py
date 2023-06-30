@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 
 # Load a model
-model = YOLO('yolov8n.pt')  # pretrained YOLOv8n model
+model = YOLO('best.pt')  # pretrained YOLOv8n model
 
 img = '1.jpg'
 
