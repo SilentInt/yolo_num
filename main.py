@@ -1,14 +1,38 @@
 from ultralytics import YOLO
 import cv2
+import numpy as np
+
+
+def pre_process(image):
+
+    # 将图片转换为HSV颜色空间
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+    # 定义黑色的阈值范围
+    lower_black = np.array([0, 0, 0])
+    # upper_black = np.array([180, 255, 50])
+    upper_black = np.array([180, 255, 60])
+
+    # 根据阈值创建掩膜
+    mask = cv2.inRange(hsv, lower_black, upper_black)
+
+    # 对掩模进行膨胀操作
+    mask = cv2.dilate(mask, np.ones((5, 5), np.uint8), iterations=5)
+    return mask
+
 
 # Load a model
 model = YOLO('best.pt')  # pretrained YOLOv8n model
 
-img = '1.jpg'
+img = cv2.imread('1.jpg')
+# 预处理
+img = pre_process(img)
 
+# 将二值图像转换为灰度图像
+img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 # Run YOLOv8 inference on the frame
 results = model(img)[0]
-
+print(model)
 # Visualize the results on the frame
 annotated_frame = results.plot()
 
